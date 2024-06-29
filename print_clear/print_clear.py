@@ -11,12 +11,12 @@ def print_clear(string: str) -> None:
     print("".join(colored(i, "red") if i.isdigit() else i for i in string))
 
 
-def main(prog: str, *args: list[str]) -> int | None:
+def main(prog: str, *args: str) -> None:
     base: str = Path(prog).name
     parser = argparse.ArgumentParser(prog=base)
     parser.add_argument("string", help="The string to print clearly")
     parser.add_argument("--version", action="version", version=f"{base} {__version__}")
-    return print_clear(**vars(parser.parse_args(args)))
+    print_clear(**vars(parser.parse_args(args)))
 
 
 def cli() -> None:
