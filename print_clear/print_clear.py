@@ -4,7 +4,7 @@ import argparse
 import sys
 
 
-__version__ = "1.0.0"
+from ._version import __version__
 
 
 def print_clear(string: str) -> None:

@@ -1,1 +1,1 @@
-from .print_clear import cli, __version__
+from ._version import __version__
