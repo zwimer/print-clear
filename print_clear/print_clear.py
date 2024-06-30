@@ -9,10 +9,10 @@ from ._version import __version__
 
 def mk_legend() -> str:
     legend = (
-        "Numbers:    " + colored("RED", "red"),
-        "Special:    " + colored("BLUE", "blue"),
-        "Uppsercase: " + colored("GREEN", "green"),
-        "Lowercase:  " + colored("DEFAULT", None),
+        "Digit:     " + colored("RED", "red"),
+        "Special:   " + colored("BLUE", "blue"),
+        "Uppercase: " + colored("GREEN", "green"),
+        "Lowercase: " + colored("DEFAULT", None),
     )
     return "Legend:\n  " + "\n  ".join(legend)
 
