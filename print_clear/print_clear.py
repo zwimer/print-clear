@@ -1,13 +1,12 @@
-from termcolor import colored
-from pathlib import Path
 import argparse
 import sys
 
+from termcolor import colored
 
 from ._version import __version__
 
 
-def mk_legend() -> str:
+def _legend() -> str:
     legend = (
         "Digit:     " + colored("RED", "red"),
         "Special:   " + colored("BLUE", "blue"),
@@ -17,7 +16,7 @@ def mk_legend() -> str:
     return "Legend:\n  " + "\n  ".join(legend)
 
 
-def color_char(c: str) -> str:
+def _color_char(c: str) -> str:
     if c.islower():
         return c
     if c.isupper():
@@ -27,26 +26,32 @@ def color_char(c: str) -> str:
     return colored(c, "blue")
 
 
+def _print_colored(s: str) -> None:
+    print("".join(_color_char(i) for i in s), end="", flush=True)
+
+
 def _main(string: str | None, legend: bool) -> None:
-    pnt = []
-    if string is not None:
-        pnt.append("".join(color_char(i) for i in string))
+    printed = True
+    if string == "-":
+        for block in sys.stdin:
+            _print_colored(block)
+    elif string is not None:
+        _print_colored(string)
+        print()
+    else:
+        printed = False
     if legend:
-        pnt.append(mk_legend())
-    if not pnt:
-        print("Error: No arguments passed.")
+        print(("\n" if printed else "") + _legend(), end="")
+    elif not printed:
+        print("Error: No arguments passed.", file=sys.stderr)
         sys.exit(1)
-    print("\n\n".join(pnt))
-
-
-def main(prog: str, *args: str) -> None:
-    base: str = Path(prog).name
-    parser = argparse.ArgumentParser(prog=base)
-    parser.add_argument("string", nargs="?", default=None, help="The string to print clearly.")
-    parser.add_argument("--legend", action="store_true", help="Print the color code legend at the end.")
-    parser.add_argument("--version", action="version", version=f"{base} {__version__}")
-    _main(**vars(parser.parse_args(args)))
 
 
 def cli() -> None:
-    main(*sys.argv)
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "string", nargs="?", default=None, help="The string to print clearly. Read from stdin if string is: -"
+    )
+    parser.add_argument("--legend", action="store_true", help="Print the color code legend at the end.")
+    parser.add_argument("--version", action="version", version=f"{parser.prog} {__version__}")
+    _main(**vars(parser.parse_args()))
